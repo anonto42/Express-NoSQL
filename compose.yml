@@ -21,7 +21,7 @@ services:
       - "${SERVER_PORT}:${SERVER_PORT}"
     environment:
       - PORT=${SERVER_PORT}
-      - MONGO_URL=${MONGO_URL}
+      - MONGO_URL=${DATABASE_URL}
     depends_on:
       - mongodb
 
