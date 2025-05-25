@@ -16,11 +16,11 @@ process.on('uncaughtException', error => {
 let server: any;
 async function main() {
   try {
-    mongoose.connect(config.database_url as string);
+    // mongoose.connect(config.database_url as string);
     logger.info(colors.green('🚀 Database connected successfully'));
 
     //Seed Super Admin after database connection is successful
-    await seedSuperAdmin();
+    // await seedSuperAdmin();
 
     const port =
       typeof config.port === 'number' ? config.port : Number(config.port);
