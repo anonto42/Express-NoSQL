@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     container_name: application
     hostname: application
+    volumes:
+      - shared-data:/shared
     ports:
       - "3000:3000"
     networks:
@@ -14,8 +16,12 @@ services:
   mongo:
     container_name: mongo
     image: mongo
+    environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: example
+        MONGO_INITDB_DATABASE: test_db
     volumes:
-      - ./data:/data/db
+      - shared-data:/shared
     ports:
       - "27017:27017"
     networks:
@@ -26,6 +32,8 @@ services:
       dockerfile: Dockerfile.nginx
     container_name: nginx
     hostname: nginx
+    volumes:
+      - shared-data:/shared
     ports:
       - "80:80"
     depends_on:
@@ -36,6 +44,9 @@ services:
 networks:
   example-network:
     # external: true
+
+volumes:
+  shared-data:
 
 
 
