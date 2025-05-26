@@ -16,7 +16,8 @@ process.on('uncaughtException', error => {
 let server: any;
 async function main() {
   try {
-    mongoose.connect(`mongodb://${config.database_user_name}:${config.databse_user_password}@mongo:${config.database_port}/${config.database_name}?authSource=admin`);
+    // mongoose.connect(`mongodb://${config.database_user_name}:${config.databse_user_password}@mongo:${config.database_port}/${config.database_name}?authSource=admin`);
+    mongoose.connect(`mongodb://mongo:${config.database_port}/${config.database_name}?authSource=admin`);
     logger.info(colors.green('🚀 Database connected successfully'));
     logger.info(colors.green(`Database name: ${ config.database_name }`));
     logger.info(colors.green(`Database was connected on port : ${ config.database_port }`));
