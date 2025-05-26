@@ -53,7 +53,7 @@ const loginUserFromDB = async (payload: ILoginData) => {
   const createToken = jwtHelper.createToken(
     { id: isExistUser._id, role: isExistUser.role, email: isExistUser.email },
     config.jwt.jwt_secret as Secret,
-    config.jwt.jwt_expire_in as string
+    Number(config.jwt.jwt_expire_in) as number
   );
 
   return { createToken };
