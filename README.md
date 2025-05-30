@@ -1,4 +1,4 @@
 ### Server run comand 
 ```
-   chmod +x run.sh && ./setup.sh
+   chmod +x setup.sh && ./setup.sh
 ```
