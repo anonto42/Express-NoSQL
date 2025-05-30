@@ -45,7 +45,7 @@ services:
       - ME_CONFIG_BASICAUTH_USERNAME=${WEB_INTERFACE_USERNAME}
       - ME_CONFIG_BASICAUTH_PASSWORD=${WEB_INTERFACE_PASSWORD}
     ports:
-      - "${DATABASE_WEB_INTERFACE_PORT}:8081"
+      - "${DATABASE_WEB_INTERFACE_PORT}:3000"
     depends_on:
       - mongo
     networks:
