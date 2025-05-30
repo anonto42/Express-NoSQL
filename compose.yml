@@ -1,4 +1,5 @@
 services:
+
   application:
     build:
       context: .
@@ -12,7 +13,7 @@ services:
     ports:
       - "${PORT}:${PORT}"
     networks:
-      - server
+      - server-net
     depends_on:
       - mongo
 
@@ -30,7 +31,7 @@ services:
     ports:
       - "${MONGODB_PORT}:27017"
     networks:
-      - server
+      - server-net
 
   mongo_express:
     image: mongo-express:1.0.2-20-alpine3.19
@@ -41,12 +42,14 @@ services:
       - ME_CONFIG_MONGODB_PORT=${MONGODB_PORT}
       - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGODB_ADMINUSERNAME}
       - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGODB_ADMINPASSWORD}
+      - ME_CONFIG_BASICAUTH_USERNAME=${WEB_INTERFACE_USERNAME}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${WEB_INTERFACE_PASSWORD}
     ports:
       - "${DATABASE_WEB_INTERFACE_PORT}:8081"
     depends_on:
       - mongo
     networks:
-      - server
+      - server-net
 
   nginx:
     build: 
@@ -56,6 +59,8 @@ services:
     hostname: nginx
     env_file:
       - .env 
+    environment:
+      - PORT=${PORT}
     volumes:
       - shared-data:/shared
     ports:
@@ -63,10 +68,10 @@ services:
     depends_on:
       - application
     networks:
-      - server
+      - server-net
 
 networks:
-  server:
+  server-net:
 
 volumes:
   shared-data:
