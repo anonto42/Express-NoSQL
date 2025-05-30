@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import router from './routes';
 import { Morgan } from './shared/morgen';
+import { serverHome } from './shared/emailTemplate';
 const app = express();
 
 //morgan
@@ -24,11 +25,7 @@ app.use('/api/v1', router);
 //live response
 app.get('/', (req: Request, res: Response) => {
   const date = new Date(Date.now());
-  res.send(
-    `<h1 style="text-align:center; color:#173616; font-family:Verdana;">Beep-beep! The server is alive and kicking.</h1>
-    <p style="text-align:center; color:#173616; font-family:Verdana;">${date}</p>
-    `
-  );
+  res.send( serverHome(date) );
 });
 
 //global error handle

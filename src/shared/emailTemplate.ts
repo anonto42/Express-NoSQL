@@ -38,7 +38,24 @@ const resetPassword = (values: IResetPassword) => {
   return data;
 };
 
+export const serverHome = (date: any) => (
+  `<!DOCTYPE html>
+    <html>
+      <head>
+        <title>Server Status</title>
+      </head>
+      <body style="margin: 0; padding: 0; background-color: #f1f7f4; font-family: Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div style="text-align: center; background-color: #ffffff; padding: 40px 30px; border-radius: 12px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); border: 2px solid #173616;">
+          <h1 style="color: #173616; font-size: 32px; margin-bottom: 10px;">🚀 Beep-beep! Server is Alive</h1>
+          <p style="color: #2f4f2f; font-size: 18px; margin-bottom: 0;">${date}</p>
+          <p style="color: #666; font-size: 14px; margin-top: 5px;">Your server just flexed its circuits 😎</p>
+        </div>
+      </body>
+    </html>
+`
+)
+
 export const emailTemplate = {
   createAccount,
-  resetPassword,
+  resetPassword
 };
