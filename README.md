@@ -1,9 +1,4 @@
-### Only Image Run command: 
+### Server run comand 
 ```
-   docker run -it -p 80:5000 "container id"
-```
-
-### Docker compose run comand 
-```
-   docker compose up --build --force-recreate --remove-orphans -d
+   chmod +x run.sh && ./setup.sh
 ```
