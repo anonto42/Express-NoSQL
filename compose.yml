@@ -1,22 +1,5 @@
 services:
 
-  application:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: application
-    hostname: application
-    env_file:
-      - .env
-    volumes:
-      - shared-data:/shared
-    ports:
-      - "${PORT}:${PORT}"
-    networks:
-      - server-net
-    depends_on:
-      - mongo
-
   mongo:
     container_name: mongo
     image: mongo
@@ -32,43 +15,133 @@ services:
       - "${MONGODB_PORT}:27017"
     networks:
       - server-net
-
-  mongo_express:
-    image: mongo-express:1.0.2-20-alpine3.19
-    env_file:
-      - .env 
-    environment:
-      - ME_CONFIG_MONGODB_SERVER=mongo
-      - ME_CONFIG_MONGODB_PORT=${MONGODB_PORT}
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGODB_ADMINUSERNAME}
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGODB_ADMINPASSWORD}
-      - ME_CONFIG_BASICAUTH_USERNAME=${WEB_INTERFACE_USERNAME}
-      - ME_CONFIG_BASICAUTH_PASSWORD=${WEB_INTERFACE_PASSWORD}
-    ports:
-      - "${DATABASE_WEB_INTERFACE_PORT}:3000"
-    depends_on:
-      - mongo
-    networks:
-      - server-net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'       # half CPU core
+          memory: 512M      # 512 MB RAM
+        reservations:
+          cpus: '0.25'      # minimum CPU reserved
+          memory: 256M      # minimum memory reserved
 
   nginx:
     build: 
       context: .
-      dockerfile: Dockerfile.nginx
+      dockerfile: ./Docker/Dockerfile.nginx
     container_name: nginx
-    hostname: nginx
-    env_file:
-      - .env 
     environment:
-      - PORT=${PORT}
+    - PORT1=1111
+    - PORT2=2222
+    - PORT3=3333
     volumes:
       - shared-data:/shared
     ports:
       - "80:80"
     depends_on:
       - application
+      - application2
+      - application3
     networks:
       - server-net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'       # half CPU core
+          memory: 512M      # 512 MB RAM
+        reservations:
+          cpus: '0.25'      # minimum CPU reserved
+          memory: 256M      # minimum memory reserved
+
+  application:
+    build:
+      context: .
+      dockerfile: ./Docker/Dockerfile
+    container_name: application
+    env_file:
+      - .env
+    volumes:
+      - shared-data:/shared
+    ports:
+      - "1111:${PORT}"
+    networks:
+      - server-net
+    depends_on:
+      - mongo
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M 
+        reservations:
+          cpus: '0.25'
+          memory: 256M 
+
+  application2:
+    build:
+      context: .
+      dockerfile: ./Docker/Dockerfile
+    container_name: application2
+    env_file:
+      - .env
+    volumes:
+      - shared-data:/shared
+    ports:
+      - "2222:${PORT}"
+    networks:
+      - server-net
+    depends_on:
+      - mongo
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M   
+        reservations:
+          cpus: '0.25'  
+          memory: 256M 
+
+  application3:
+    build:
+      context: .
+      dockerfile: ./Docker/Dockerfile
+    container_name: application3
+    env_file:
+      - .env
+    volumes:
+      - shared-data:/shared
+    ports:
+      - "3333:${PORT}"
+    networks:
+      - server-net
+    depends_on:
+      - mongo
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5' 
+          memory: 512M
+        reservations:
+          cpus: '0.25' 
+          memory: 256M 
+
+
+  # mongo_express:
+  #   image: mongo-express:1.0.2-20-alpine3.19
+  #   env_file:
+  #     - .env 
+  #   environment:
+  #     - ME_CONFIG_MONGODB_SERVER=mongo
+  #     - ME_CONFIG_MONGODB_PORT=${MONGODB_PORT}
+  #     - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGODB_ADMINUSERNAME}
+  #     - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGODB_ADMINPASSWORD}
+  #     - ME_CONFIG_BASICAUTH_USERNAME=${WEB_INTERFACE_USERNAME}
+  #     - ME_CONFIG_BASICAUTH_PASSWORD=${WEB_INTERFACE_PASSWORD}
+  #   ports:
+  #     - "${DATABASE_WEB_INTERFACE_PORT}:3000"
+  #   depends_on:
+  #     - mongo
+  #   networks:
+  #     - server-net
 
 networks:
   server-net:
