@@ -134,20 +134,28 @@ async function main() {
   ];
 
   for (const file of filesToAsk) {
-    const answer = await askQuestion(`Do you want to create ${file.filename}? (y/n) `);
+    const answer = await askQuestion(
+      `Do you want to create ${file.filename}? (y/n) `,
+    );
     if (answer === 'y' || answer === 'yes') {
       const filePath = path.join(modulePath, file.filename);
       if (fs.existsSync(filePath)) {
         console.log(`${file.filename} already exists. Skipping...`);
         continue;
       }
-      const content = templates[file.key] ? templates[file.key](moduleName) : '';
+      const content = templates[file.key]
+        ? templates[file.key](moduleName)
+        : '';
       fs.writeFileSync(filePath, content, 'utf-8');
       console.log(`Created ${file.filename}`);
-    } else {
+    } else if (answer === 'n' || answer === 'no') {
       console.log(`Skipped ${file.filename}`);
+    } else {
+        console.log(`Invalid answer: ${answer}`);
+        process.exit(1);
     }
   }
+ 
 
   rl.close();
 }
