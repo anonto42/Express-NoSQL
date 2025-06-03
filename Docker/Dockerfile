@@ -5,7 +5,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # 3. Copy package files and install deps
-COPY package*.json ./
+COPY ../package*.json ./
 RUN npm install
 
 # 4. Copy source code
