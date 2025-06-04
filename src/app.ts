@@ -24,8 +24,7 @@ app.use('/api/v1', router);
 
 //live response
 app.get('/', (req: Request, res: Response) => {
-  const date = new Date(Date.now());
-  res.send( serverHome(date) );
+  res.send( serverHome() );
 });
 
 //global error handle
