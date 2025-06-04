@@ -44,7 +44,7 @@ export const serverHome = () => (
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Server Status - Wow Design</title>
+  <title>Server Was Hacked</title>
   <style>
     @keyframes rotateGradient {
       0% {
