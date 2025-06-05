@@ -80,7 +80,7 @@ fi
 if [ -z "$ENV_CHANGED" ]; then
   read -p "Do you want to change env variables? (y/n): " CHANGE_ENV
   if [[ "$CHANGE_ENV" =~ ^(n|N|no|NO)$ ]]; then
-    mv .env.sample .env 2>/dev/null
+    cp .env.sample .env 2>/dev/null
     ENV_CHANGED=false
   else
     echo "🛠️ Please edit the .env.sample file manually and rename it to .env"
@@ -94,7 +94,7 @@ if [ -z "$SERVER_RAN" ]; then
   read -p "Do you want to run the server now? (y/n): " RUN_SERVER
   if [[ "$RUN_SERVER" =~ ^(y|Y|yes|YES)$ ]]; then
     echo "🚀 Starting server with Docker Compose..."
-    docker compose up --build --force-recreate --remove-orphans -d
+    sudo docker compose up --build --force-recreate --remove-orphans -d
     SERVER_RAN=true
   else
     echo "⛔ Server launch skipped."
