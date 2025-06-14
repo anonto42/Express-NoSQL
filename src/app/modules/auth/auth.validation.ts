@@ -41,10 +41,17 @@ const createChangePasswordZodSchema = z.object({
   }),
 });
 
+const createRefreshToken = z.object({
+  body: z.object({
+    refreshToken: z.string({ required_error: "You must give the refreshtoken to genarate a access token"})
+  })
+})
+
 export const AuthValidation = {
   createVerifyEmailZodSchema,
   createForgetPasswordZodSchema,
   createLoginZodSchema,
   createResetPasswordZodSchema,
   createChangePasswordZodSchema,
+  createRefreshToken,
 };

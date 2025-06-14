@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { USER_ROLES } from '../../../enums/user';
+import { STATUS, USER_ROLES } from '../../../enums/user';
 
 export type IUser = {
   name: string;
@@ -9,7 +9,7 @@ export type IUser = {
   password: string;
   location: string;
   image?: string;
-  status: 'active' | 'delete';
+  status: STATUS;
   verified: boolean;
   authentication?: {
     isResetPassword: boolean;
@@ -19,6 +19,7 @@ export type IUser = {
 };
 
 export type UserModal = {
+  isValidUser(id: string):any;
   isExistUserById(id: string): any;
   isExistUserByEmail(email: string): any;
   isMatchPassword(password: string, hashPassword: string): boolean;

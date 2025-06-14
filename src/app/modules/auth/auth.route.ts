@@ -31,6 +31,12 @@ router.post(
 );
 
 router.post(
+  '/refresh-token',
+  validateRequest(AuthValidation.createRefreshToken),
+  AuthController.refreshAccesstoken
+);
+ 
+router.post(
   '/change-password',
   auth(USER_ROLES.ADMIN, USER_ROLES.USER),
   validateRequest(AuthValidation.createChangePasswordZodSchema),

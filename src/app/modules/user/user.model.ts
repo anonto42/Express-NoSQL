@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
 import { model, Schema } from 'mongoose';
 import config from '../../../config';
-import { USER_ROLES } from '../../../enums/user';
+import { STATUS, USER_ROLES } from '../../../enums/user';
 import ApiError from '../../../errors/ApiError';
 import { IUser, UserModal } from './user.interface';
 
@@ -15,6 +15,7 @@ const userSchema = new Schema<IUser, UserModal>(
     role: {
       type: String,
       enum: Object.values(USER_ROLES),
+      default: USER_ROLES.USER,
       required: true,
     },
     email: {
@@ -35,29 +36,26 @@ const userSchema = new Schema<IUser, UserModal>(
     },
     status: {
       type: String,
-      enum: ['active', 'delete'],
-      default: 'active',
+      enum: Object.values(STATUS),
+      default: STATUS.ACTIVE,
     },
     verified: {
       type: Boolean,
       default: false,
     },
     authentication: {
-      type: {
-        isResetPassword: {
-          type: Boolean,
-          default: false,
-        },
-        oneTimeCode: {
-          type: Number,
-          default: null,
-        },
-        expireAt: {
-          type: Date,
-          default: null,
-        },
+      isResetPassword: {
+        type: Boolean,
+        default: false,
       },
-      select: 0,
+      oneTimeCode: {
+        type: Number,
+        default: null,
+      },
+      expireAt: {
+        type: Date,
+        default: null,
+      },
     },
   },
   { timestamps: true }
@@ -80,6 +78,37 @@ userSchema.statics.isMatchPassword = async (
   hashPassword: string
 ): Promise<boolean> => {
   return await bcrypt.compare(password, hashPassword);
+};
+
+//Check user With validation in shourt and return the user
+userSchema.statics.isValidUser = async (id: string) => {
+  const isExist = await User  
+                        .findById( id)
+                        .select("-password -authentication -__v -updatedAt -createdAt")
+                        .lean()
+                        .exec();
+
+  if (!isExist) {
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      "User not found"
+    );
+  };
+
+  if (!isExist.verified) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      "Your account was not verified!"
+    )
+  };
+
+  if (isExist.status !== STATUS.ACTIVE) {
+    throw new ApiError(
+      StatusCodes.NOT_ACCEPTABLE,
+      `You account was ${isExist.status}!`
+    );
+  };
+  return isExist;
 };
 
 //check user
