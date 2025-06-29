@@ -53,28 +53,28 @@ sudo su <<EOF
 EOF
 
 # CI/CD pipeline
-if [ -z "$CICD_USED" ]; then
-  read -p "Will you use CI/CD pipeline? (y/n): " USE_CICD
-  if [[ "$USE_CICD" =~ ^(y|Y|yes|YES)$ ]]; then
-    CICD_USED=true
-    echo "Choose your CI/CD tool:"
-    echo "1. GitHub Actions"
-    echo "2. Jenkins"
-    read -p "Enter option (1 or 2): " CICD_OPTION
-    if [ "$CICD_OPTION" == "1" ]; then
-      mv github .github 2>/dev/null
-      CICD_TYPE="github"
-    elif [ "$CICD_OPTION" == "2" ]; then
-      CICD_TYPE="jenkins"
-    else
-      echo "❌ Invalid option. Skipping CI/CD."
-      CICD_USED=false
-    fi
-  else
-    CICD_USED=false
-  fi
-  save_config
-fi
+# if [ -z "$CICD_USED" ]; then
+#   read -p "Will you use CI/CD pipeline? (y/n): " USE_CICD
+#   if [[ "$USE_CICD" =~ ^(y|Y|yes|YES)$ ]]; then
+#     CICD_USED=true
+#     echo "Choose your CI/CD tool:"
+#     echo "1. GitHub Actions"
+#     echo "2. Jenkins"
+#     read -p "Enter option (1 or 2): " CICD_OPTION
+#     if [ "$CICD_OPTION" == "1" ]; then
+#       mv github .github 2>/dev/null
+#       CICD_TYPE="github"
+#     elif [ "$CICD_OPTION" == "2" ]; then
+#       CICD_TYPE="jenkins"
+#     else
+#       echo "❌ Invalid option. Skipping CI/CD."
+#       CICD_USED=false
+#     fi
+#   else
+#     CICD_USED=false
+#   fi
+#   save_config
+# fi
 
 # Environment variable setup
 if [ -z "$ENV_CHANGED" ]; then
