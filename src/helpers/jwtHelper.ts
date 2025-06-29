@@ -1,13 +1,15 @@
 import jwt, { JwtPayload, Secret, SignOptions } from 'jsonwebtoken';
+import { StringValue } from 'ms';
 
 const createToken = (
   payload: string | object | Buffer,
   secret: Secret,
-  expireTime: number
+  expireTime: StringValue
 ): string => {
 
   const options: SignOptions = {
     expiresIn: expireTime,
+    algorithm: "HS512"
   };
 
   return jwt.sign(payload, secret, options);

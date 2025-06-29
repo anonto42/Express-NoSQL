@@ -11,6 +11,7 @@ export type ILoginData = {
 export type IAuthResetPassword = {
   newPassword: string;
   confirmPassword: string;
+  token: string
 };
 
 export type IChangePassword = {
