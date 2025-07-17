@@ -23,6 +23,7 @@ const auth =
           config.jwt.jwt_secret as Secret
         );
         //set user to header
+        //@ts-ignore
         req.user = verifyUser;
 
         //guard user

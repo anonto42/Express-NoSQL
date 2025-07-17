@@ -7,7 +7,7 @@
     "create-modules": "ts-node-dev src/script/create-module.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.dev.ts",
+    "dev": "nodemon --legacy-watch src/server.dev.ts",
     "lint:check": "eslint --ignore-path .eslintignore --ext .js,.ts",
     "lint:fix": "lint . --fix",
     "prettier:check": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
@@ -33,6 +33,7 @@
     "nodemailer": "^6.9.14",
     "socket.io": "^4.7.5",
     "stripe": "^18.1.0",
+    "tsc": "^2.0.4",
     "winston": "^3.13.0",
     "winston-daily-rotate-file": "^5.0.0",
     "zod": "^3.23.8"
@@ -50,7 +51,9 @@
     "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.8.3"
   }
 }

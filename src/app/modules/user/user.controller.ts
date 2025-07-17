@@ -6,7 +6,7 @@ import sendResponse from '../../../shared/sendResponse';
 import { UserService } from './user.service';
 
 const createUser = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request | any, res: Response, next: NextFunction) => {
     const { ...userData } = req.body;
     const result = await UserService.createUserToDB(userData);
 
@@ -19,7 +19,7 @@ const createUser = catchAsync(
   }
 );
 
-const getUserProfile = catchAsync(async (req: Request, res: Response) => {
+const getUserProfile = catchAsync(async (req: Request | any, res: Response) => {
   const user = req.user;
   const result = await UserService.getUserProfileFromDB(user);
 
@@ -33,7 +33,7 @@ const getUserProfile = catchAsync(async (req: Request, res: Response) => {
 
 //update profile
 const updateProfile = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request | any, res: Response, next: NextFunction) => {
     const user = req.user;
     let image = getSingleFilePath(req.files, 'image');
 
