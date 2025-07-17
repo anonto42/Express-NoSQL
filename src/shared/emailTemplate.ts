@@ -6,15 +6,16 @@ const createAccount = (values: ICreateAccount) => {
     subject: 'Verify your account',
     html: `<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 50px; padding: 20px; color: #555;">
     <div style="width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <img src="https://i.postimg.cc/6pgNvKhD/logo.png" alt="Logo" style="display: block; margin: 0 auto 20px; width:150px" />
-          <h2 style="color: #277E16; font-size: 24px; margin-bottom: 20px;">Hey! ${values.name}, Your Toothlens Account Credentials</h2>
+        <h2 style="color: #277E16; font-size: 24px; margin-bottom: 20px;">Hello, ${values.name}!</h2>
         <div style="text-align: center;">
-            <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">Your single use code is:</p>
+            <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">Thank you for registering with us. To complete your account setup, please verify your email by entering the OTP below:</p>
             <div style="background-color: #277E16; width: 80px; padding: 10px; text-align: center; border-radius: 8px; color: #fff; font-size: 25px; letter-spacing: 2px; margin: 20px auto;">${values.otp}</div>
-            <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">This code is valid for 3 minutes.</p>
+            <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">This OTP is valid for 3 minutes. Please use it to confirm your email address and activate your account.</p>
+            <p style="color: #555; font-size: 16px; line-height: 1.5;">If you did not create an account with us, please ignore this email.</p>
         </div>
     </div>
-</body>`,
+</body>
+`,
   };
   return data;
 };
@@ -25,18 +26,18 @@ const resetPassword = (values: IResetPassword) => {
     subject: 'Reset your password',
     html: `
       <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px; color: #333;">
-        <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; padding: 25px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-          <h2 style="text-align: center; color: #222;">Reset Password</h2>
-          <p style="font-size: 15px; text-align: center;">Use the code below to reset your password:</p>
-          <div style="background-color: #277E16; width: 100px; margin: 20px auto; padding: 12px 0; border-radius: 6px; color: #fff; font-size: 24px; font-weight: bold; text-align: center; letter-spacing: 2px;">
+    <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; padding: 25px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <h2 style="text-align: center; color: #222;">Reset Password</h2>
+        <p style="font-size: 15px; text-align: center;">Use the code below to reset your password:</p>
+        <div style="background-color: #277E16; width: 100px; margin: 20px auto; padding: 12px 0; border-radius: 6px; color: #fff; font-size: 24px; font-weight: bold; text-align: center; letter-spacing: 2px;">
             ${values.otp}
-          </div>
-          <p style="font-size: 14px; text-align: center; color: #555;">This code is valid for <strong>5 minutes</strong>.</p>
-          <p style="font-size: 13px; color: #999; margin-top: 25px; line-height: 1.6;">
-            If you didn’t request this code, you can safely ignore this email. Someone may have entered your email by mistake.
-          </p>
         </div>
-      </body>
+        <p style="font-size: 14px; text-align: center; color: #555;">This code is valid for <strong>5 minutes</strong>.</p>
+        <p style="font-size: 13px; color: #999; margin-top: 25px; line-height: 1.6;">
+            If you didn’t request this code, you can safely ignore this email. Someone may have entered your email by mistake.
+        </p>
+    </div>
+</body>
     `,
   };
   return data;
