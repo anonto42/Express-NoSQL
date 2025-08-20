@@ -11,19 +11,60 @@ import { User } from './user.model';
 
 const createUserToDB = async (payload: Partial<IUser>): Promise<any> => {
   //set role
-  payload.role = USER_ROLES.USER;
-  const createUser = await User.create(payload);
-  if (!createUser) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create user');
+  payload.role = USER_ROLES.EMPLOYER;
+  let createUser;
+
+  const isUserExist = await User.findOne({ email: payload.email });
+  if (isUserExist) {
+    
+    //send email
+    const otp = generateOTP(6);
+    const values = {
+      name: isUserExist.name,
+      otp: otp,
+      email: isUserExist.email!,
+    };
+    
+    const createAccountTemplate = emailTemplate.createAccount(values);
+    emailHelper.sendEmail(createAccountTemplate);
+
+    //save to DB
+    const authentication = {
+      oneTimeCode: otp,
+      expireAt: new Date(Date.now() + 5 * 60000),
+      isResetPassword: false,
+    };
+
+    isUserExist.password = payload.password!;
+    isUserExist.authentication = authentication;
+    await isUserExist.save();
+
+    return {
+      message: "Otp send successfully on your email!",
+      statusCode: 409,
+      user:{
+        name: isUserExist.name,
+        email: isUserExist.email,
+        image: isUserExist.image,
+        isVerified: isUserExist.verified,
+      }
+    };
+
+  } else {
+    createUser = await User.create(payload);
+    if (!createUser) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create user');
+    }
   }
 
   //send email
-  const otp = generateOTP();
+  const otp = generateOTP(6);
   const values = {
     name: createUser.name,
     otp: otp,
     email: createUser.email!,
   };
+  
   const createAccountTemplate = emailTemplate.createAccount(values);
   emailHelper.sendEmail(createAccountTemplate);
 
@@ -32,6 +73,7 @@ const createUserToDB = async (payload: Partial<IUser>): Promise<any> => {
     oneTimeCode: otp,
     expireAt: new Date(Date.now() + 5 * 60000),
   };
+
   await User.findOneAndUpdate(
     { _id: createUser._id },
     { $set: { authentication } }
