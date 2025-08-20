@@ -73,7 +73,10 @@ const loginUserFromDB = async (payload: ILoginData) => {
     expireAt: expireAt
   })
   
-  return { accessToken: createToken, refreshToken };
+  isExistUser.password = '';
+  isExistUser.authentication = undefined;
+
+  return { accessToken: createToken, refreshToken, user: isExistUser };
 };
 
 // refresh access token
@@ -128,6 +131,7 @@ const forgetPasswordToDB = async (email: string) => {
   const authentication = {
     oneTimeCode: otp,
     expireAt: new Date(Date.now() + 5 * 60000),
+    isExistUser: true,
   };
   await User.findOneAndUpdate({ email }, { $set: { authentication } });
 };
@@ -162,7 +166,7 @@ const verifyEmailToDB = async (payload: IVerifyEmail) => {
   let message;
   let data;
 
-  if (!isExistUser.verified) {
+  if (isExistUser.authentication.isResetPassword) {
     await User.findOneAndUpdate(
       { _id: isExistUser._id },
       { verified: true, authentication: { oneTimeCode: null, expireAt: null } }
