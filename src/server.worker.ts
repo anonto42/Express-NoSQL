@@ -11,7 +11,9 @@ import { errorLogger, logger } from './shared/logger';
 let server: any;
 async function main() {
   try {
-    await mongoose.connect(`mongodb://${config.database_user_name}:${config.databse_user_password}@mongo:${config.database_port}/${config.database_name}?authSource=admin`);
+    // await mongoose.connect(`mongodb://${config.database_user_name}:${config.databse_user_password}@mongo:${config.database_port}/${config.database_name}?authSource=admin`);
+    await mongoose.connect(`mongodb://localhost:${config.database_port}/${config.database_name}`);
+
     logger.info(colors.green('🚀 Database connected successfully'));
     await seedSuperAdmin();
 
