@@ -11,7 +11,7 @@ import { User } from './user.model';
 
 const createUserToDB = async (payload: Partial<IUser>): Promise<any> => {
   //set role
-  payload.role = USER_ROLES.EMPLOYER;
+  payload.role = USER_ROLES.USER;
   let createUser;
 
   const isUserExist = await User.findOne({ email: payload.email });
@@ -72,6 +72,7 @@ const createUserToDB = async (payload: Partial<IUser>): Promise<any> => {
   const authentication = {
     oneTimeCode: otp,
     expireAt: new Date(Date.now() + 5 * 60000),
+    isResetPassword: false,
   };
 
   await User.findOneAndUpdate(
