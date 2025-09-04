@@ -108,7 +108,7 @@ const refreshToken = async ( { refreshToken }: { refreshToken: string} ) => {
     config.jwt.jwt_expire_in as StringValue
   );
 
-  return newAccessToken 
+  return {newAccessToken} 
 }
 
 //forget password
