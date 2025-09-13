@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import router from './routes';
 import { Morgan } from './shared/morgen';
-import { serverHome } from './shared/emailTemplate';
+import { htmlTemplate } from './shared/htmlTemplate';
 const app = express();
 
 //morgan
@@ -24,7 +24,7 @@ app.use('/api/v1', router);
 
 //live response
 app.get('/', (req: Request, res: Response) => {
-  res.send( serverHome() );
+  res.send( htmlTemplate.serverHome() );
 });
 
 //global error handle
