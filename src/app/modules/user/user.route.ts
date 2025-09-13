@@ -1,33 +1,54 @@
-import express, { NextFunction, Request, Response } from 'express';
-import { USER_ROLES } from '../../../enums/user';
-import auth from '../../middlewares/auth';
-import fileUploadHandler from '../../middlewares/fileUploadHandler';
-import validateRequest from '../../middlewares/validateRequest';
-import { UserController } from './user.controller';
-import { UserValidation } from './user.validation';
-const router = express.Router();
+import { Router, Request, Response, NextFunction } from "express";
+import { UserController } from "./user.controller";
+import { UserValidation } from "./user.validation";
+import auth from "../../middlewares/auth";
+import fileUploadHandler from "../../middlewares/fileUploadHandler";
+import validateRequest from "../../middlewares/validateRequest";
+import { USER_ROLES } from "../../../enums/user";
 
-router
-  .route('/profile')
-  .get(auth(USER_ROLES.ADMIN, USER_ROLES.USER), UserController.getUserProfile)
-  .patch(
-    auth(USER_ROLES.ADMIN, USER_ROLES.USER),
-    fileUploadHandler(),
-    (req: Request, res: Response, next: NextFunction) => {
-      if (req.body.data) {
-        req.body = UserValidation.updateUserZodSchema.parse(
-          JSON.parse(req.body.data)
-        );
+export class UserRoutes {
+  public router: Router;
+  private userController: UserController;
+
+  constructor() {
+    this.router = Router();
+    this.userController = new UserController();
+    this.initializeRoutes();
+  }
+
+  private initializeRoutes(): void {
+    
+    // GET /profile
+    this
+    .router
+    .route("/")
+    .get(
+      auth(USER_ROLES.ADMIN, USER_ROLES.USER),
+      this.userController.getUserProfile
+    )
+    .post(
+      validateRequest(UserValidation.createUserZodSchema),
+      this.userController.createUser
+    );
+
+    // PATCH /profile
+    this
+    .router
+    .route("/profile")
+    .patch(
+      auth(USER_ROLES.ADMIN, USER_ROLES.USER),
+      fileUploadHandler(),
+      (req: Request, res: Response, next: NextFunction) => {
+        if (req.body.data) {
+          req.body = UserValidation.updateUserZodSchema.parse(
+            JSON.parse(req.body.data)
+          );
+        }
+        return this.userController.updateProfile(req, res, next);
       }
-      return UserController.updateProfile(req, res, next);
-    }
-  );
+    );
 
-router
-  .route('/')
-  .post(
-    validateRequest(UserValidation.createUserZodSchema),
-    UserController.createUser
-  );
+  }
+}
 
-export const UserRoutes = router;
+export default new UserRoutes().router;
