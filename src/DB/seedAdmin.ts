@@ -3,21 +3,20 @@ import config from '../config';
 import { USER_ROLES } from '../enums/user';
 import { logger } from '../shared/logger';
 
-const payload = {
-  name: 'Administrator',
-  email: config.super_admin.email,
-  role: USER_ROLES.ADMIN,
-  password: config.super_admin.password,
-  verified: true,
-};
+export class Seeder {
+  public static async seedSuperAdmin(): Promise<void> {
+    const payload = {
+      name: 'Administrator',
+      email: config.super_admin.email,
+      role: USER_ROLES.ADMIN,
+      password: config.super_admin.password,
+      verified: true,
+    };
 
-export const seedSuperAdmin = async () => {
-  const isExistSuperAdmin = await User.findOne({
-    email: config.super_admin.email,
-    role: USER_ROLES.ADMIN,
-  });
-  if (!isExistSuperAdmin) {
-    await User.create(payload);
-    logger.info('✨ Super Admin account has been successfully created!');
+    const adminExists = await User.findOne({ email: payload.email, role: USER_ROLES.ADMIN });
+    if (!adminExists) {
+      await User.create(payload);
+      logger.info('✨ Super Admin account created successfully!');
+    }
   }
-};
+}
