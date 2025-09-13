@@ -4,6 +4,7 @@ dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 export default {
   ip_address: process.env.IP_ADDRESS,
+  mongo_uri: process.env.MONGODB_URI,
   database_port: process.env.MONGODB_PORT,
   database_name: process.env.DATABASE_NAME,
   database_user_name: process.env.MONGODB_ADMINUSERNAME,
