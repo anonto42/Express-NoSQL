@@ -1,11 +1,11 @@
 import colors from 'colors';
-import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 import app from './app';
 import config from './config';
-import { seedSuperAdmin } from './DB/seedAdmin';
 import { socketHelper } from './helpers/socketHelper';
 import { errorLogger, logger } from './shared/logger';
+import Database from './DB/db';
+import { Seeder } from './DB/seedAdmin';
 
 
 process.on('uncaughtException', error => {
@@ -17,10 +17,9 @@ let server: any;
 
 async function main() {
   try {
-    await mongoose.connect(`mongodb://localhost:${config.database_port}/${config.database_name}`);
-    logger.info(colors.green('🚀 Database connected successfully'));
-
-    await seedSuperAdmin();
+    
+    await Database.connect(); 
+    await Seeder.seedSuperAdmin(); 
 
     const port = Number(config.port);
     server = app.listen(port, config.ip_address as string, () => {
