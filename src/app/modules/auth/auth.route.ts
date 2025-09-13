@@ -1,46 +1,65 @@
-import express from 'express';
-import { USER_ROLES } from '../../../enums/user';
-import auth from '../../middlewares/auth';
-import validateRequest from '../../middlewares/validateRequest';
+import { Router, Request, Response, NextFunction } from 'express';
 import { AuthController } from './auth.controller';
 import { AuthValidation } from './auth.validation';
-const router = express.Router();
+import auth from '../../middlewares/auth';
+import validateRequest from '../../middlewares/validateRequest';
+import { USER_ROLES } from '../../../enums/user';
 
-router.post(
-  '/login',
-  validateRequest(AuthValidation.createLoginZodSchema),
-  AuthController.loginUser
-);
+export class AuthRoutes {
+  public router: Router;
+  private authController: AuthController;
 
-router.post(
-  '/forget-password',
-  validateRequest(AuthValidation.createForgetPasswordZodSchema),
-  AuthController.forgetPassword
-);
+  constructor() {
+    this.router = Router();
+    this.authController = new AuthController(); 
+    this.initializeRoutes();
+  }
 
-router.post(
-  '/verify-email',
-  validateRequest(AuthValidation.createVerifyEmailZodSchema),
-  AuthController.verifyEmail
-);
+  private initializeRoutes(): void {
+    // POST /login
+    this.router.post(
+      '/login',
+      validateRequest(AuthValidation.createLoginZodSchema),
+      this.authController.loginUser
+    );
 
-router.post(
-  '/reset-password',
-  validateRequest(AuthValidation.createResetPasswordZodSchema),
-  AuthController.resetPassword
-);
+    // POST /forget-password
+    this.router.post(
+      '/forget-password',
+      validateRequest(AuthValidation.createForgetPasswordZodSchema),
+      this.authController.forgetPassword
+    );
 
-router.post(
-  '/refresh-token',
-  validateRequest(AuthValidation.createRefreshToken),
-  AuthController.refreshAccesstoken
-);
- 
-router.post(
-  '/change-password',
-  auth(USER_ROLES.ADMIN, USER_ROLES.USER),
-  validateRequest(AuthValidation.createChangePasswordZodSchema),
-  AuthController.changePassword
-);
+    // POST /verify-email
+    this.router.post(
+      '/verify-email',
+      validateRequest(AuthValidation.createVerifyEmailZodSchema),
+      this.authController.verifyEmail
+    );
 
-export const AuthRoutes = router;
+    // POST /reset-password
+    this.router.post(
+      '/reset-password',
+      validateRequest(AuthValidation.createResetPasswordZodSchema),
+      this.authController.resetPassword
+    );
+
+    // POST /refresh-token
+    this.router.post(
+      '/refresh-token',
+      validateRequest(AuthValidation.createRefreshToken),
+      this.authController.refreshAccessToken
+    );
+
+    // POST /change-password
+    this.router.post(
+      '/change-password',
+      auth(USER_ROLES.ADMIN, USER_ROLES.USER),
+      validateRequest(AuthValidation.createChangePasswordZodSchema),
+      this.authController.changePassword
+    );
+  }
+}
+
+// export singleton instance
+export default new AuthRoutes().router;
