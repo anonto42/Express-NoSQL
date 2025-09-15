@@ -47,7 +47,6 @@ export class UserRoutes {
         return this.userController.updateProfile(req, res, next);
       }
     );
-
   }
 }
 

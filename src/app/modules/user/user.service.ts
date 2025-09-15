@@ -1,4 +1,3 @@
-// user.service.ts
 import { UserRepository } from './user.repository';
 import { IUser } from './user.interface';
 import generateOTP from '../../../util/generateOTP';
@@ -8,7 +7,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import ApiError from '../../../errors/ApiError';
 import { StatusCodes } from 'http-status-codes';
 import unlinkFile from '../../../shared/unlinkFile';
-import { USER_ROLES, STATUS } from '../../../enums/user';
+import { USER_ROLES } from '../../../enums/user';
 
 export class UserService {
   private userRepo: UserRepository;
