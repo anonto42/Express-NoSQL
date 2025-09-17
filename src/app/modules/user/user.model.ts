@@ -115,6 +115,8 @@ userSchema.statics.isValidUser = async (id: string) => {
   return isExist;
 };
 
+
+// Hash password if the password was modified on every save call
 userSchema.pre('save', async function (next) {
   
   if (this.isModified('password')) {
@@ -124,6 +126,20 @@ userSchema.pre('save', async function (next) {
     );
   }
 
+  next();
+});
+
+// Hash on findOneAndUpdate
+userSchema.pre("findOneAndUpdate", async function (next) {
+  const update = this.getUpdate() as any;
+
+  if (update?.password) {
+    update.password = await bcrypt.hash(
+      update.password,
+      Number(config.bcrypt_salt_rounds)
+    );
+    this.setUpdate(update);
+  }
   next();
 });
 

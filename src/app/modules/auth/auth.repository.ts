@@ -34,7 +34,7 @@ export class AuthRepository {
   }
 
   async isTokenExist(token: string) {
-    return ResetToken.exists({ token });
+    return ResetToken.findOne({ token }).lean();
   }
 
   async isTokenExpired(token: string) {

@@ -31,6 +31,7 @@ export class AuthService {
     }
 
     const isPasswordMatch = password && await bcrypt.compare(password, user.password);
+
     if (!isPasswordMatch) throw new ApiError(400, 'Password is incorrect');
 
     const accessToken = jwtHelper.createToken(
@@ -48,9 +49,16 @@ export class AuthService {
 
     await this.authRepo.createResetToken(user._id, refreshToken, new Date(Date.now() + expireMs));
 
-    user.password = '';
-    user.authentication = undefined;
-    return { accessToken, refreshToken, user };
+    return { 
+      accessToken, 
+      refreshToken, 
+      user:{
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        _id: user._id
+      }
+    };
   }
 
   public async refreshToken(refreshToken: string) {
@@ -76,7 +84,7 @@ export class AuthService {
     const otp = generateOTP(6);
     emailHelper.sendEmail(htmlTemplate.resetPassword({ otp, email: user.email }));
 
-    const authentication = { oneTimeCode: otp, expireAt: new Date(Date.now() + 5 * 60000), isExistUser: true };
+    const authentication = { oneTimeCode: otp, expireAt: new Date(Date.now() + 5 * 60000), isResetPassword: true };
     await this.authRepo.updateUserById(user._id, { authentication });
   }
 
@@ -89,7 +97,7 @@ export class AuthService {
     if (new Date() > user.authentication.expireAt!) throw new ApiError(400, "OTP expired");
 
     let data;
-    if (user.authentication.isResetPassword) {
+    if (!user.authentication.isResetPassword) {
       await this.authRepo.updateUserById(user._id, { verified: true, authentication: { oneTimeCode: null, expireAt: null } });
     } else {
       const token = cryptoToken();
@@ -97,13 +105,14 @@ export class AuthService {
       await this.authRepo.updateUserById(user._id, { authentication: { isResetPassword: true, oneTimeCode: null, expireAt: null } });
       data = token;
     }
-    return { data, message: 'Verification Successful' };
+    return { data:{ token: data }, message: 'Verification Successfull' };
   }
 
   public async resetPassword(payload: IAuthResetPassword) {
     const tokenDoc = await this.authRepo.isTokenExist(payload.token);
     if (!tokenDoc) throw new ApiError(401, "Unauthorized");
 
+    //@ts-ignore
     const user = await this.authRepo.findUserById(tokenDoc.user, true);
     if (!user?.authentication?.isResetPassword) throw new ApiError(401, "No permission");
 
@@ -112,8 +121,8 @@ export class AuthService {
 
     if (payload.newPassword !== payload.confirmPassword) throw new ApiError(400, "Passwords do not match");
 
-    const hashPassword = await bcrypt.hash(payload.newPassword, Number(config.bcrypt_salt_rounds));
-    await this.authRepo.updateUserById(user._id, { password: hashPassword, authentication: { isResetPassword: false } });
+    // const hashPassword = await bcrypt.hash(payload.newPassword, Number(config.bcrypt_salt_rounds));
+    await this.authRepo.updateUserById(user._id, { password: payload.confirmPassword, authentication: { isResetPassword: null } });
   }
 
   public async changePassword(user: JwtPayload, payload: IChangePassword) {
@@ -121,6 +130,7 @@ export class AuthService {
     if (!dbUser) throw new ApiError(400, "User doesn't exist");
 
     const isMatch = await bcrypt.compare(payload.currentPassword, dbUser.password!);
+    
     if (!isMatch) throw new ApiError(400, "Current password is incorrect");
 
     if (payload.currentPassword === payload.newPassword) throw new ApiError(400, "New password must be different");
