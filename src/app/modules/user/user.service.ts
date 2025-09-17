@@ -51,7 +51,7 @@ export class UserService {
         oneTimeCode: otp,
         expireAt: new Date(Date.now() + 5 * 60_000),
         isResetPassword: false,
-      },
+      }
     });
 
     return { name: newUser.name, email: newUser.email, image: newUser.image };
