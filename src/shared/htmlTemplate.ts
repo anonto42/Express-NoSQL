@@ -12,25 +12,73 @@ export class HTMLTemplate {
       to: values.email,
       subject: "Verify your account",
       html: `
-        <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 50px; padding: 20px; color: #555;">
-          <div style="width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-              <h2 style="color: #277E16; font-size: 24px; margin-bottom: 20px;">Hello, ${values.name}!</h2>
-              <div style="text-align: center;">
-                  <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
-                    Thank you for registering with us. To complete your account setup, please verify your email by entering the OTP below:
-                  </p>
-                  <div style="background-color: #277E16; width: 80px; padding: 10px; text-align: center; border-radius: 8px; color: #fff; font-size: 25px; letter-spacing: 2px; margin: 20px auto;">
-                    ${values.otp}
-                  </div>
-                  <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
-                    This OTP is valid for 3 minutes. Please use it to confirm your email address and activate your account.
-                  </p>
-                  <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                    If you did not create an account with us, please ignore this email.
-                  </p>
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #555;">
+  <table role="presentation" style="width: 100%; height: 100%; padding: 20px; background-color: #f9f9f9;">
+    <tr>
+      <td align="center">
+        <!-- Main Container -->
+        <table role="presentation" style="width: 100%; max-width: 600px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 30px; box-sizing: border-box;">
+          <tr>
+            <td style="text-align: center;">
+              <h2 style="color: #277E16; font-size: 24px; margin-bottom: 20px; font-weight: normal;">
+                Hello, ${values.name}!
+              </h2>
+              <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+                Thank you for registering with us. To complete your account setup, please verify your email by entering the OTP below:
+              </p>
+
+              <!-- Optimized OTP Box -->
+              <div style="
+                display: inline-block;
+                background-color: #277E16;
+                padding: 15px 25px;
+                border-radius: 12px;
+                color: #fff;
+                font-size: 28px;
+                font-weight: bold;
+                letter-spacing: 4px;
+                margin: 20px 0;
+                min-width: 120px;
+                text-align: center;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+              ">
+                ${values.otp}
               </div>
-          </div>
-        </body>
+
+              <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+                This OTP is valid for 3 minutes. Please use it to confirm your email address and activate your account.
+              </p>
+              <p style="font-size: 16px; line-height: 1.5;">
+                If you did not create an account with us, please ignore this email.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Responsive Styles -->
+  <style>
+    @media only screen and (max-width: 480px) {
+      h2 {
+        font-size: 20px !important;
+      }
+      p {
+        font-size: 14px !important;
+      }
+      div[style*="letter-spacing: 4px"] {
+        padding: 10px 20px !important;
+        font-size: 22px !important;
+        min-width: 90px !important;
+        letter-spacing: 3px !important;
+      }
+      table[role="presentation"] {
+        padding: 20px !important;
+      }
+    }
+  </style>
+</body>
       `,
     };
   }
