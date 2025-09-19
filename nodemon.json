@@ -1,7 +1,6 @@
 {
-    "exec": "ts-node --transpile-only src/server.dev.ts",
-    "watch": ["src"],
-    "ext": "ts",
-    "ignore": ["src/**/*.spec.ts"]
-  }
-  
+  "exec": "ts-node --transpile-only src/server.dev.ts",
+  "watch": ["src"],
+  "ext": "ts",
+  "ignore": ["src/**/*.spec.ts"]
+}
